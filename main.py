@@ -1,12 +1,14 @@
-import Helpers.database as database
 from CadastroWindow import CadastroWindow
+from AutenticarWindow import AutenticarWindow
+from MenuWindow import MenuWindow
 from PyQt5.QtWidgets import QApplication
+import Helpers.database as database
 
 def appStartup():
   database.start()
   
   app = QApplication([])
-  window = CadastroWindow()
+  window = MenuWindow()
   app.exec_()
 
 if __name__ == '__main__':

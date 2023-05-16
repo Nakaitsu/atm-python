@@ -1,4 +1,4 @@
-class Cliente:
+class Usuario:
   def __init__(self, nome, cpf, endereco, senha, saldo, id = None):
     self.nome = nome
     self.cpf = cpf

@@ -1,0 +1,1 @@
+SELECT * FROM users WHERE cpf = %s and senha = %s
