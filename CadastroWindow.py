@@ -44,6 +44,8 @@ class CadastroWindow(QMainWindow):
 
       database.addUsuario(novoUsuario)
       self.__limparTela()
+      self.close()
+      self.parent.show()
 
       print('novo cliente foi salvo: ', novoUsuario.nome)
     else:
@@ -53,6 +55,7 @@ class CadastroWindow(QMainWindow):
     self.__limparTela()
 
   def btnCancelar_Clicked(self):
+    self.__limparTela()
     self.close()
     self.parent.show()
 

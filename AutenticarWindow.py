@@ -33,6 +33,7 @@ class AutenticarWindow(QMainWindow):
       if usuario:
         print('logado')
 
+        self.__limparTela()
         self.close()
         self.parent.show()
       else:
@@ -45,6 +46,7 @@ class AutenticarWindow(QMainWindow):
     self.__limparTela()
 
   def btnCancelar_Clicked(self):
+    self.__limparTela()
     pass
 
   def __limparTela(self):
@@ -52,5 +54,6 @@ class AutenticarWindow(QMainWindow):
     self.txtSenha.setText('')
 
   def btnCadastrar_Clicked(self):
+    self.__limparTela()
     self.hide()
     tela = CadastroWindow(self)
