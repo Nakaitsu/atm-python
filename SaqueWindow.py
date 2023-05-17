@@ -31,8 +31,6 @@ class SaqueWindow(QMainWindow):
       self.session['usuario'] = database.getUsuarioById(usuario.id)
       self.quantidadeSaque = 0
 
-      print('SAQUE EFETUADO')
-
   def txtValorSaque_textChanged(self, text):
     if self.__validar():
       self.txtValorSaque.setText(text)

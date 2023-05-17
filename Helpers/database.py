@@ -1,7 +1,8 @@
 import mysql.connector
 from Models.Usuario import Usuario
+from Models.Cedula import Cedula
 
-def start():
+def start() -> None:
   conn = mysql.connector.connect(
     host = 'localhost',
     user = 'root',
@@ -25,6 +26,8 @@ def getConexao():
     database = 'caixa_eletronico',
     auth_plugin = 'mysql_native_password'
   )
+
+## USUARIO ######
 
 def addUsuario(usuario):
   with open('SQL/insertUsuario.sql', 'r') as comando:
@@ -84,9 +87,6 @@ def getUsuarioById(idUsuario):
 
   return usuario
 
-def getCedulas():
-  pass
-
 def atualizarSaldoUsuario(idUsuario, novoSaldo) -> None:
   query = f'UPDATE users SET saldo = {novoSaldo} WHERE id = {idUsuario}'
 
@@ -97,31 +97,47 @@ def atualizarSaldoUsuario(idUsuario, novoSaldo) -> None:
   conn.commit()
 
   conn.close()
-   
 
-# def getSaldoUsuario(idUsuario):
-#   query = ('SELECT saldo FROM users WHERE id = {idUsuario}')
+## CEDULAS ######
 
-#   conn = getConexao()
+def getCedulas():
+  query = 'SELECT * FROM cedulas'
 
-#   cursor = conn.cursor()
-#   cursor.execute(query)
-#   saldo = cursor.fetchone()
+  conn = getConexao()
 
-#   conn.close()
+  cursor = conn.cursor()
+  cursor.execute(query)
+  cedulas = cursor.fetchall()
 
-#   return saldo
+  listaCedulas = []
 
-# def saqueUsuario(idUsuario, valor):
-#   pass
+  for c in cedulas:
+    cedula = Cedula(
+      id = c[0],
+      nome = c[1],
+      valor = c[2],
+      quantidade = c[3]
+    )
 
+    listaCedulas.append(cedula)
 
+  conn.close()
 
+  return listaCedulas
 
+def atualizarCedula(idCedula, quantiade) -> None:
+  query = f'UPDATE cedulas SET quantidade = {quantiade} WHERE id = {idCedula}'
 
+  conn = getConexao()
+
+  cursor = conn.cursor()
+  cursor.execute(query)
+  conn.commit()
+
+  conn.close()
 
 # for nota in reversed(notas):
-#             if int(self.valor) >= nota:
-#                 quantidade_notas = int(self.valor) // nota
-#                 resultado += f"Serão {quantidade_notas} de R${nota}\n"
-#                 self.valor = int(self.valor) % nota
+  # if int(self.valor) >= nota:
+  #     quantidade_notas = int(self.valor) // nota
+  #     resultado += f"Serão {quantidade_notas} de R${nota}\n"
+  #     self.valor = int(self.valor) % nota

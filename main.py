@@ -6,7 +6,7 @@ def appStartup():
   database.start()
   
   app = QApplication([])
-  window = MenuWindow()
+  tela = MenuWindow()
   app.exec_()
 
 if __name__ == '__main__':
