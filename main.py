@@ -1,5 +1,3 @@
-from CadastroWindow import CadastroWindow
-from AutenticarWindow import AutenticarWindow
 from MenuWindow import MenuWindow
 from PyQt5.QtWidgets import QApplication
 import Helpers.database as database

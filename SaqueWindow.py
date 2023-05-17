@@ -1,30 +1,63 @@
+import Helpers.database as database
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import uic
 
 class SaqueWindow(QMainWindow):
-  def __init__(self, parent = None):
+  def __init__(self, parent = None, session = None):
     super(SaqueWindow, self).__init__(parent)
     uic.loadUi('Views/Saque.ui', self)
 
     self.parent = parent
+    self.session = parent.session
     self.quantidadeSaque = 0
 
-    self.btn20.clicked.connect(lambda: self.addValorSaque(20))
-    self.btn50.clicked.connect(lambda: self.addValorSaque(50))
-    self.btn100.clicked.connect(lambda: self.addValorSaque(100))
-    self.btn150.clicked.connect(lambda: self.addValorSaque(150))
+    self.btnConfirmar.clicked.connect(self.btnConfirmar_Clicked)
+    self.btnCancelar.clicked.connect(self.btnCancelar_Clicked)
+    self.btnLimpar.clicked.connect(self.btnLimpar_Clicked)
+    self.btn20.clicked.connect(lambda: self.efetuarSaque(20))
+    self.btn50.clicked.connect(lambda: self.efetuarSaque(50))
+    self.btn100.clicked.connect(lambda: self.efetuarSaque(100))
+    self.btn150.clicked.connect(lambda: self.efetuarSaque(150))
+    self.txtValorSaque.textChanged.connect(self.txtValorSaque_textChanged)
 
     self.show()
 
-  def addValorSaque(self, valor):
-    self.quantidadeSaque += valor
-    self.txtValorSaque.setText(str(self.quantidadeSaque))
+  def efetuarSaque(self, valor):
+    if self.__validarSaque(valor):
+      usuario = self.session['usuario']
+      self.quantidadeSaque = valor
 
-  def validar(self):
-    pass
+      database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
+      self.session['usuario'] = database.getUsuarioById(usuario.id)
+      self.quantidadeSaque = 0
+
+      print('SAQUE EFETUADO')
+
+  def txtValorSaque_textChanged(self, text):
+    if self.__validar():
+      self.txtValorSaque.setText(text)
+    else:
+      self.txtValorSaque.setText(text[:-1])
+
+  def __validarSaque(self, valorSaque) -> bool:
+    usuario = self.session['usuario']
+    usuarioTemSaldo = usuario.saldo - valorSaque > 0
+
+    if valorSaque > 0 and usuarioTemSaldo:
+      return True
+    
+    return False
+
+  def __validar(self) -> bool:
+    try:
+      self.quantidadeSaque = int(self.txtValorSaque.text())
+      return True
+    except:
+      return False
 
   def btnConfirmar_Clicked(self):
-    pass
+    if self.__validar():
+      self.efetuarSaque(int(self.txtValorSaque.text()))
 
   def btnCancelar_Clicked(self):
     self.__limparTela()
@@ -35,4 +68,4 @@ class SaqueWindow(QMainWindow):
     self.__limparTela()
 
   def __limparTela(self):
-    pass
+    self.txtValorSaque.setText('')

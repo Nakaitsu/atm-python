@@ -4,17 +4,17 @@ from AutenticarWindow import AutenticarWindow
 from SaqueWindow import SaqueWindow
 
 class MenuWindow(QMainWindow):
-  def __init__(self, parent = None, sessao = None):
+  def __init__(self, parent = None, session = None):
     super(MenuWindow, self).__init__(parent)
     uic.loadUi('Views/Menu.ui', self)
 
-    self.sessao = sessao
+    self.session = session
     self.parent = parent
 
     self.btnSaque.clicked.connect(self.openSaque)
 
-    if sessao:
-      print(sessao)
+    if session:
+      print(session)
     else:
       print('no session available')
       self.hide()

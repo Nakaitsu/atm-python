@@ -16,7 +16,7 @@ class CadastroWindow(QMainWindow):
 
     self.show()
 
-  def validar(self):
+  def __validar(self):
     nome = self.txtNome.text(),
     cpf = self.txtCPF.text(),
     endereco = self.txtEndereco.text(),
@@ -33,7 +33,7 @@ class CadastroWindow(QMainWindow):
     return False
 
   def btnConfirmar_Clicked(self):
-    if self.validar():
+    if self.__validar():
       novoUsuario = Usuario(
         nome = self.txtNome.text(),
         cpf = self.txtCPF.text(),

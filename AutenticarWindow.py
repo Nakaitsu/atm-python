@@ -1,4 +1,5 @@
 import Helpers.database as database
+from Models.Usuario import Usuario
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow
 from CadastroWindow import CadastroWindow
@@ -17,14 +18,14 @@ class AutenticarWindow(QMainWindow):
 
     self.show()
 
-  def validar(self):
+  def __validar(self):
     cpf = self.txtCPF.text()
     senha = self.txtSenha.text()
 
     return cpf and senha
 
   def btnConfirmar_Clicked(self):
-    if self.validar():
+    if self.__validar():
       usuario = database.getUsuario(
         cpf = self.txtCPF.text(),
         senha = self.txtSenha.text()
@@ -33,6 +34,7 @@ class AutenticarWindow(QMainWindow):
       if usuario:
         print('logado')
 
+        self.parent.session = {'usuario': usuario}
         self.__limparTela()
         self.close()
         self.parent.show()

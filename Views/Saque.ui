@@ -92,7 +92,7 @@
      <enum>QLineEdit::Normal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="btnConfirmar">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -105,7 +105,7 @@
      <string>CONFIRMAR</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="btnLimpar">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -118,7 +118,7 @@
      <string>LIMPAR</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_7">
+   <widget class="QPushButton" name="btnCancelar">
     <property name="geometry">
      <rect>
       <x>340</x>
