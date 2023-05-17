@@ -1,7 +1,7 @@
 import Helpers.database as database
 from Models.Usuario import Usuario
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from CadastroWindow import CadastroWindow
 
 class AutenticarWindow(QMainWindow):
@@ -25,24 +25,26 @@ class AutenticarWindow(QMainWindow):
     return cpf and senha
 
   def btnConfirmar_Clicked(self):
-    if self.__validar():
-      usuario = database.getUsuario(
-        cpf = self.txtCPF.text(),
-        senha = self.txtSenha.text()
-      )
+    try:
+      if self.__validar():
+        usuario = database.getUsuario(
+          cpf = self.txtCPF.text(),
+          senha = self.txtSenha.text()
+        )
 
-      if usuario:
-        print('logado')
-
-        self.parent.session = {'usuario': usuario}
-        self.__limparTela()
-        self.close()
-        self.parent.show()
-      else:
-        print('erro de autenticacao')
+        if usuario.id:
+          self.parent.session = {'usuario': usuario}
+          self.__limparTela()
+          self.close()
+          self.parent.show()
+        else:
+          QMessageBox.warning(self, 'ERRO', 'Erro de autenticação!')
       
-    else:
-      print('Inválido')
+      else:
+        QMessageBox.warning(self, 'AVISO', 'Preencha todos os campos!')
+
+    except Exception as e:
+      QMessageBox.warning(self, 'ERRO', e.message)
 
   def btnLimpar_Clicked(self):
     self.__limparTela()

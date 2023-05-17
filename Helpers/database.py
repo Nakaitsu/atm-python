@@ -14,8 +14,14 @@ def start() -> None:
 
   with open('SQL/startup.sql', 'r') as comando:
     query = comando.read()
+  
+  queries = query.split(';')
 
-  cursor.execute(query)
+  for query in queries:
+    if query.split():
+      cursor.execute(query)
+      conn.commit()
+
   conn.close()
 
 def getConexao():
@@ -54,12 +60,13 @@ def getUsuario(cpf, senha):
   cursor.execute(query, (cpf, senha))
   dados = cursor.fetchone()
 
-  usuario.id = dados[0]
-  usuario.nome = dados[1]
-  usuario.cpf = dados[2]
-  usuario.endereco = dados[3]
-  usuario.senha = dados[4]
-  usuario.saldo = dados[5]
+  if dados:
+    usuario.id = dados[0]
+    usuario.nome = dados[1]
+    usuario.cpf = dados[2]
+    usuario.endereco = dados[3]
+    usuario.senha = dados[4]
+    usuario.saldo = dados[5]
 
   conn.close()
   
@@ -76,12 +83,13 @@ def getUsuarioById(idUsuario):
   cursor.execute(query)
   dados = cursor.fetchone()
 
-  usuario.id = dados[0]
-  usuario.nome = dados[1]
-  usuario.cpf = dados[2]
-  usuario.endereco = dados[3]
-  usuario.senha = dados[4]
-  usuario.saldo = dados[5]
+  if dados:
+    usuario.id = dados[0]
+    usuario.nome = dados[1]
+    usuario.cpf = dados[2]
+    usuario.endereco = dados[3]
+    usuario.senha = dados[4]
+    usuario.saldo = dados[5]
 
   conn.close()
 

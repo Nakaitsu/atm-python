@@ -17,14 +17,14 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>330</x>
       <y>30</y>
-      <width>51</width>
+      <width>131</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>SAQUE</string>
+     <string>EFETUAR SAQUE</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn20">
@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>20</string>
+     <string>R$ 20</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn50">
@@ -50,33 +50,33 @@
      </rect>
     </property>
     <property name="text">
-     <string>50</string>
+     <string>R$ 50</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn100">
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>110</y>
+      <y>120</y>
       <width>94</width>
       <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>100</string>
+     <string>R$ 100</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn150">
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>140</y>
+      <y>150</y>
       <width>94</width>
       <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>150</string>
+     <string>R$ 150</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="txtValorSaque">
@@ -142,6 +142,77 @@
     </property>
     <property name="text">
      <string>VALOR DO SAQUE</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>240</y>
+      <width>31</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>DejaVu Sans</family>
+      <pointsize>17</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R$</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>280</y>
+      <width>251</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Informar apenas um valor inteiro</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblSaldo">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>450</y>
+      <width>181</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SEU SALDO: R$</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>380</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SAQUE:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblSaque">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>410</y>
+      <width>271</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

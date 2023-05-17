@@ -1,5 +1,5 @@
 import Helpers.database as database
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5 import uic
 
 class SaqueWindow(QMainWindow):
@@ -29,7 +29,26 @@ class SaqueWindow(QMainWindow):
 
       database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
       self.session['usuario'] = database.getUsuarioById(usuario.id)
+
+      self.lblSaldo.setText(self.lblSaldo.text() + str(self.session['usuario'].saldo))
+
+      notas = database.getCedulas()
+      resultado = ''
+      qtdSaque = self.quantidadeSaque
+
+      for nota in reversed(notas):
+        if qtdSaque >= nota.valor:
+            quantidade_notas = qtdSaque // nota.valor
+            resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+            qtdSaque = qtdSaque % nota.valor
+
+      self.lblSaque.setText(resultado)
       self.quantidadeSaque = 0
+
+      QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+
+    else:
+      QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
 
   def txtValorSaque_textChanged(self, text):
     if self.__validar():

@@ -1,7 +1,7 @@
 import Helpers.database as database
 from Models.Usuario import Usuario
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 class CadastroWindow(QMainWindow):
   def __init__(self, parent = None):
@@ -17,20 +17,20 @@ class CadastroWindow(QMainWindow):
     self.show()
 
   def __validar(self):
-    nome = self.txtNome.text(),
-    cpf = self.txtCPF.text(),
-    endereco = self.txtEndereco.text(),
-    senha = self.txtSenha.text(),
-    saldo = float(self.txtSaldo.text())
+    try:
+      nome = self.txtNome.text(),
+      cpf = self.txtCPF.text(),
+      endereco = self.txtEndereco.text(),
+      senha = self.txtSenha.text(),
+      saldo = float(self.txtSaldo.text())
 
-    if nome and cpf and endereco and senha and saldo:
-      try:
-        float(saldo)
+      if nome and cpf and endereco and senha and saldo:
         return True
-      except ValueError:
-        return False
+      
+      return False
     
-    return False
+    except:
+      return False
 
   def btnConfirmar_Clicked(self):
     if self.__validar():
@@ -43,13 +43,14 @@ class CadastroWindow(QMainWindow):
       )
 
       database.addUsuario(novoUsuario)
+      QMessageBox.information(self, 'SUCESSO', 'Cadastro efetuado com sucesso!')
+      
       self.__limparTela()
       self.close()
       self.parent.show()
 
-      print('novo cliente foi salvo: ', novoUsuario.nome)
     else:
-      print('Inválido')
+      QMessageBox.warning(self, 'ERRO', 'Preencha todos os campos!')
 
   def btnLimpar_Clicked(self):
     self.__limparTela()

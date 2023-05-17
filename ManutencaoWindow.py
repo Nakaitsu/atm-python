@@ -19,7 +19,7 @@ class ManutencaoWindow(QMainWindow):
 
     self.btnPrev.setEnabled(False)
 
-    if not self.cedulas.count() > 1:
+    if not self.cedulas.len() > 1:
       self.btnNext.setEnabled(False)
 
     self.cedulaAtual = self.cedulas[0]
@@ -30,7 +30,7 @@ class ManutencaoWindow(QMainWindow):
     self.lblNomeCedula.setText(self.cedulaAtual.nome)
     self.btnPrev.setEnabled(True)
 
-    if self.cedulas.index(self.cedulaAtual) >= self.cedulas.count():
+    if self.cedulas.index(self.cedulaAtual) >= self.cedulas.len():
       self.btnNext.setEnabled(False)
 
   def btnPrev_Clicked(self):
