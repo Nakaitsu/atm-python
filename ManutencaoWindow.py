@@ -1,7 +1,8 @@
 import Helpers.database as database
-# from Models.Cedula import Cedula
+from Models.Cedula import Cedula
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 class ManutencaoWindow(QMainWindow):
   def __init__(self, parent = None, session = None):
@@ -10,47 +11,96 @@ class ManutencaoWindow(QMainWindow):
 
     self.parent = parent
     self.session = session
-    self.cedulas = database.getCedulas()
 
-    self.btnNext.clicked.connect(self.btnNext_Clicked)
-    self.btnPrev.clicked.connect(self.btnPrev_Clicked)
-    self.btnAdd.clicked.connect(self.btnAdd_Clicked)
-    self.btnConfirmar.clicked.connect(self.btnConfirmar_Clicked)
+    self.btnVoltar.clicked.connect(self.btnVoltar_Clicked)
+    self.btnConfirmarReposicao.clicked.connect(self.btnConfirmarReposicao_Clicked)
+    self.btnConfirmarCadastro.clicked.connect(self.btnConfirmarCadastro_Clicked)
+    self.btnNotificacoes.clicked.connect(self.btnNotificacoes_Clicked)
+    
+    self.__notificarCedulasEmFalta()
+    self.__atualizar()
 
-    self.btnPrev.setEnabled(False)
-
-    if not self.cedulas.len() > 1:
-      self.btnNext.setEnabled(False)
-
-    self.cedulaAtual = self.cedulas[0]
     self.show()
 
-  def btnNext_Clicked(self):
-    self.cedulaAtual = self.cedulas[self.cedulas.index(self.cedulaAtual) + 1]
-    self.lblNomeCedula.setText(self.cedulaAtual.nome)
-    self.btnPrev.setEnabled(True)
+  def __notificarCedulasEmFalta(self):
+    self.notificacoes = []
 
-    if self.cedulas.index(self.cedulaAtual) >= self.cedulas.len():
-      self.btnNext.setEnabled(False)
+    for cedula in  database.getCedulasEmFalta():
+      self.notificacoes.append(f'A cédula de R${cedula.nome} está em falta!')
 
-  def btnPrev_Clicked(self):
-    self.cedulaAtual = self.cedulas[self.cedulas.index(self.cedulaAtual) - 1]
-    self.lblNomeCedula.setText(self.cedulaAtual.nome)
-    self.btnNext.setEnabled(True)
+    if len(self.notificacoes) > 0:
+      self.btnNotificacoes.setText(f'Notificações ({len(self.notificacoes)})')
+    else:
+      self.btnNotificacoes.setText('Notificações')
 
-    if self.cedulas.index(self.cedulaAtual) <= 0:
-      self.btnPrev.setEnabled(False)
+  def __atualizar(self):
+    self.cedulas = database.getCedulas()
+    
+    notasModel = QStandardItemModel()
 
-  def btnAdd_Clicked(self): # form para adicionar a cedula (nome, quantidade, valor)
-    pass
+    for nota in self.cedulas:
+      item = QStandardItem(f'{nota.quantidade} notas de R${nota.nome} disponívies')
+      notasModel.appendRow(item)
 
-  def btnConfirmar_Clicked(self):
-    if self.__validar():
-      database.atualizarCedula(self.cedulaAtual.id, int(self.txtQuantidade))
+      self.cbbReposicaoNota.addItem(nota.nome, nota.id)
 
-  def __validar(self) -> bool:
+    self.lsvNotas.setModel(notasModel)
+    self.__notificarCedulasEmFalta()
+
+  def btnNotificacoes_Clicked(self):
+    if len(self.notificacoes) > 0:
+      QMessageBox.information(self, self.btnNotificacoes.text(), "\n".join(self.notificacoes))
+    else:
+      QMessageBox.information(self, 'VAZIO', 'Nenhuma notificação!')
+
+  def btnConfirmarCadastro_Clicked(self):
     try:
-      quantidade = int(self.txtQuantidade)
-      return True
+      if self.__validarCadastro():
+        novaCedula = Cedula(
+          nome = self.txtCadastroNome.text(),
+          valor = int(self.txtCadastroValor.text()),
+          quantidade = int(self.spbCadastroQuantidade.text())
+        )
+
+        database.addCedula(novaCedula)
+        self.__atualizar()
+        self.__limparTela()
+
+        QMessageBox.information(self, 'SUCESSO', 'Nova cédula cadastrada!')
+      else:
+        QMessageBox.warning(self, 'ERROR', 'O cadastro possui erro!')
+
+    except Exception as e:
+      QMessageBox.warning(self, 'ERROR', str(e))
+
+  def __validarCadastro(self):
+    try:
+      nome = self.txtCadastroNome.text()
+      valor = int(self.txtCadastroValor.text())
+      quantidade = self.spbCadastroQuantidade.value()
+
+      if nome and valor and quantidade > 0:
+        return True
+
+      return False
     except:
       return False
+
+  def __limparTela(self):
+    self.txtCadastroNome.setText('')
+    self.txtCadastroValor.setText('')
+    self.spbCadastroQuantidade.setValue(0)
+    self.cbbReposicaoNota.setCurrentIndex(0)
+    self.spbReposicaoQuantidade.setValue(0)
+
+  def btnVoltar_Clicked(self):
+    self.close()
+    self.__limparTela()
+    self.parent.show()
+
+  def btnConfirmarReposicao_Clicked(self):
+    database.atualizarCedula(int(self.cbbReposicaoNota.currentData()), self.spbReposicaoQuantidade.value(), True)
+    self.__limparTela()
+    self.__atualizar()
+    
+    QMessageBox.information(self, 'SUCESSO', 'Reposição efetuada com sucesso!')

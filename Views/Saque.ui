@@ -17,9 +17,9 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>350</x>
       <y>30</y>
-      <width>131</width>
+      <width>101</width>
       <height>18</height>
      </rect>
     </property>
@@ -82,7 +82,7 @@
    <widget class="QLineEdit" name="txtValorSaque">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>260</x>
       <y>220</y>
       <width>301</width>
       <height>51</height>
@@ -95,7 +95,7 @@
    <widget class="QPushButton" name="btnConfirmar">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>360</x>
       <y>340</y>
       <width>94</width>
       <height>26</height>
@@ -108,7 +108,7 @@
    <widget class="QPushButton" name="btnLimpar">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>360</x>
       <y>370</y>
       <width>94</width>
       <height>26</height>
@@ -121,7 +121,7 @@
    <widget class="QPushButton" name="btnCancelar">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>360</x>
       <y>400</y>
       <width>94</width>
       <height>26</height>
@@ -134,7 +134,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>340</x>
       <y>180</y>
       <width>131</width>
       <height>18</height>
@@ -147,7 +147,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>220</x>
       <y>240</y>
       <width>31</width>
       <height>18</height>
@@ -166,7 +166,7 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>290</x>
       <y>280</y>
       <width>251</width>
       <height>18</height>
@@ -180,13 +180,13 @@
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>450</y>
+      <y>380</y>
       <width>181</width>
       <height>18</height>
      </rect>
     </property>
     <property name="text">
-     <string>SEU SALDO: R$</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -199,7 +199,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>SAQUE:</string>
+     <string>Resultado do SAQUE:</string>
     </property>
    </widget>
    <widget class="QLabel" name="lblSaque">
@@ -213,6 +213,38 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>90</y>
+      <width>131</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Notas disponíveis:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblNotasDisponiveis">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>110</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

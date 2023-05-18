@@ -109,7 +109,7 @@ def atualizarSaldoUsuario(idUsuario, novoSaldo) -> None:
 ## CEDULAS ######
 
 def getCedulas():
-  query = 'SELECT * FROM cedulas'
+  query = 'SELECT * FROM cedulas ORDER BY valor DESC'
 
   conn = getConexao()
 
@@ -133,19 +133,60 @@ def getCedulas():
 
   return listaCedulas
 
-def atualizarCedula(idCedula, quantiade) -> None:
-  query = f'UPDATE cedulas SET quantidade = {quantiade} WHERE id = {idCedula}'
+def addCedula(cedula):
+  with open('SQL/insertCedula.sql', 'r') as comando:
+    query = comando.read()
 
   conn = getConexao()
 
   cursor = conn.cursor()
+  values = (cedula.nome, cedula.valor, cedula.quantidade)
+  cursor.execute(query, values)
+  conn.commit()  
+  
+  conn.close()
+
+def atualizarCedula(idCedula, quantidade, incrementar) -> None:
+  query = ''
+
+  conn = getConexao()
+
+  cursor = conn.cursor()
+  query = f'SELECT quantidade FROM cedulas WHERE id = {idCedula}'
+  cursor.execute(query)
+  cedulaQuantiade = cursor.fetchone()
+  
+  if incrementar:
+    query = f'UPDATE cedulas SET quantidade = {cedulaQuantiade[0] + quantidade} WHERE id = {idCedula}'
+  else:
+    query = f'UPDATE cedulas SET quantidade = {cedulaQuantiade[0] - quantidade} WHERE id = {idCedula}'
+
   cursor.execute(query)
   conn.commit()
 
   conn.close()
 
-# for nota in reversed(notas):
-  # if int(self.valor) >= nota:
-  #     quantidade_notas = int(self.valor) // nota
-  #     resultado += f"Serão {quantidade_notas} de R${nota}\n"
-  #     self.valor = int(self.valor) % nota
+def getCedulasEmFalta():
+  query = 'SELECT * FROM cedulas WHERE quantidade = 0 ORDER BY valor DESC'
+
+  conn = getConexao()
+
+  cursor = conn.cursor()
+  cursor.execute(query)
+  cedulas = cursor.fetchall()
+
+  listaCedulas = []
+
+  for c in cedulas:
+    cedula = Cedula(
+      id = c[0],
+      nome = c[1],
+      valor = c[2],
+      quantidade = c[3]
+    )
+
+    listaCedulas.append(cedula)
+
+  conn.close()
+
+  return listaCedulas

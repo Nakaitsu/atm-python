@@ -19,6 +19,13 @@ class SaqueWindow(QMainWindow):
     self.btn100.clicked.connect(lambda: self.efetuarSaque(100))
     self.btn150.clicked.connect(lambda: self.efetuarSaque(150))
     self.txtValorSaque.textChanged.connect(self.txtValorSaque_textChanged)
+    
+    strNotas = []
+
+    for nota in database.getCedulas():
+      strNotas.append(nota.nome)  
+
+    self.lblNotasDisponiveis.setText(" | ".join(strNotas))
 
     self.show()
 
@@ -30,17 +37,19 @@ class SaqueWindow(QMainWindow):
       database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
       self.session['usuario'] = database.getUsuarioById(usuario.id)
 
-      self.lblSaldo.setText(self.lblSaldo.text() + str(self.session['usuario'].saldo))
+      self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
       notas = database.getCedulas()
+      notas = [nota for nota in notas if nota.quantidade > 0]
+
       resultado = ''
       qtdSaque = self.quantidadeSaque
 
-      for nota in reversed(notas):
+      for nota in notas:
         if qtdSaque >= nota.valor:
-            quantidade_notas = qtdSaque // nota.valor
-            resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
-            qtdSaque = qtdSaque % nota.valor
+          quantidade_notas = qtdSaque // nota.valor
+          resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+          qtdSaque = qtdSaque % nota.valor
 
       self.lblSaque.setText(resultado)
       self.quantidadeSaque = 0
