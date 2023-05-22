@@ -16,9 +16,6 @@ class MenuWindow(QMainWindow):
     self.btnSair.clicked.connect(self.encerrarSessao)
     self.btnManutencao.clicked.connect(self.openManutencao)
 
-    # if not self.session.usuario.isAdmin:
-    #   self.btnManutencao.hide()
-
     if session:
       print(session)
       self.show()

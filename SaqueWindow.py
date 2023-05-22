@@ -19,6 +19,7 @@ class SaqueWindow(QMainWindow):
     self.btn100.clicked.connect(lambda: self.efetuarSaque(100))
     self.btn150.clicked.connect(lambda: self.efetuarSaque(150))
     self.txtValorSaque.textChanged.connect(self.txtValorSaque_textChanged)
+    self.lblSaldo.setText(f'SEU SALDO: R$ {str(self.session["usuario"].saldo)}')
     
     strNotas = []
 
@@ -34,27 +35,42 @@ class SaqueWindow(QMainWindow):
       usuario = self.session['usuario']
       self.quantidadeSaque = valor
 
-      database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
       self.session['usuario'] = database.getUsuarioById(usuario.id)
-
-      self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
       notas = database.getCedulas()
       notas = [nota for nota in notas if nota.quantidade > 0]
 
       resultado = ''
       qtdSaque = self.quantidadeSaque
-
+      
+      saqueValido = False
+      
       for nota in notas:
-        if qtdSaque >= nota.valor:
-          quantidade_notas = qtdSaque // nota.valor
-          resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
-          qtdSaque = qtdSaque % nota.valor
+        if qtdSaque % nota.valor == 0:
+          saqueValido = True
 
-      self.lblSaque.setText(resultado)
-      self.quantidadeSaque = 0
+      if saqueValido: 
+        if usuario.saldo >= qtdSaque:
+          for nota in notas:
+            if qtdSaque >= nota.valor and nota.quantidade > 0:
+              quantidade_notas = qtdSaque // nota.valor
+              resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+              qtdSaque = qtdSaque % nota.valor
+              database.atualizarCedula(nota.id, quantidade_notas, 0)
 
-      QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+          self.lblSaque.setText(resultado)
+
+          database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque, 0)
+          self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+          self.session['usuario'] = database.getUsuarioById(usuario.id)
+
+          self.quantidadeSaque = 0
+          QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+          
+        else:
+          QMessageBox.information(self, 'ERROR', 'Saldo insuficiente!')
+      else:
+        QMessageBox.warning(self, 'ERROR', 'Valor de saque inválido!')
 
     else:
       QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')

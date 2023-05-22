@@ -105,19 +105,6 @@
      <string>Limpar</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnCancelar">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>310</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Cancelar</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnCadastrar">
     <property name="geometry">
      <rect>

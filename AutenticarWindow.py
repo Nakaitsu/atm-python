@@ -13,7 +13,6 @@ class AutenticarWindow(QMainWindow):
 
     self.btnConfirmar.clicked.connect(self.btnConfirmar_Clicked)
     self.btnLimpar.clicked.connect(self.btnLimpar_Clicked)
-    self.btnCancelar.clicked.connect(self.btnCancelar_Clicked)
     self.btnCadastrar.clicked.connect(self.btnCadastrar_Clicked)
 
     self.show()
@@ -48,10 +47,6 @@ class AutenticarWindow(QMainWindow):
 
   def btnLimpar_Clicked(self):
     self.__limparTela()
-
-  def btnCancelar_Clicked(self):
-    self.__limparTela()
-    pass
 
   def __limparTela(self):
     self.txtCPF.setText('')

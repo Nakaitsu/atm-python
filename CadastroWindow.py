@@ -19,12 +19,12 @@ class CadastroWindow(QMainWindow):
   def __validar(self):
     try:
       nome = self.txtNome.text(),
-      cpf = self.txtCPF.text(),
+      cpf = int(self.txtCPF.text()),
       endereco = self.txtEndereco.text(),
       senha = self.txtSenha.text(),
-      saldo = float(self.txtSaldo.text())
+      saldo = int(self.txtSaldo.text())
 
-      if nome and cpf and endereco and senha and saldo:
+      if nome and cpf and endereco and senha and saldo > 0:
         return True
       
       return False
@@ -34,23 +34,28 @@ class CadastroWindow(QMainWindow):
 
   def btnConfirmar_Clicked(self):
     if self.__validar():
-      novoUsuario = Usuario(
-        nome = self.txtNome.text(),
-        cpf = self.txtCPF.text(),
-        endereco = self.txtEndereco.text(),
-        senha = self.txtSenha.text(),
-        saldo = float(self.txtSaldo.text())
-      )
+      saldo = float(self.txtSaldo.text())
 
-      database.addUsuario(novoUsuario)
-      QMessageBox.information(self, 'SUCESSO', 'Cadastro efetuado com sucesso!')
-      
-      self.__limparTela()
-      self.close()
-      self.parent.show()
+      if saldo > 0:
+        novoUsuario = Usuario(
+          nome = self.txtNome.text(),
+          cpf = self.txtCPF.text(),
+          endereco = self.txtEndereco.text(),
+          senha = self.txtSenha.text(),
+          saldo = float(self.txtSaldo.text())
+        )
 
+        database.addUsuario(novoUsuario)
+        QMessageBox.information(self, 'SUCESSO', 'Cadastro efetuado com sucesso!')
+        
+        self.__limparTela()
+        self.close()
+        self.parent.show()
+      else:
+        QMessageBox.warning(self, 'ERRO', 'Informe um valor de saldo positivo!')
+    
     else:
-      QMessageBox.warning(self, 'ERRO', 'Preencha todos os campos!')
+      QMessageBox.warning(self, 'ERRO', 'Cadastro inválido!')
 
   def btnLimpar_Clicked(self):
     self.__limparTela()
