@@ -60,9 +60,9 @@ class SaqueWindow(QMainWindow):
 
           self.lblSaque.setText(resultado)
 
-          database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque, 0)
-          self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+          database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
           self.session['usuario'] = database.getUsuarioById(usuario.id)
+          self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
           self.quantidadeSaque = 0
           QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
