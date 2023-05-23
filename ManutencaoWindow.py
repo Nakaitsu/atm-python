@@ -56,14 +56,23 @@ class ManutencaoWindow(QMainWindow):
 
   def btnConfirmarCadastro_Clicked(self):
     try:
+      nome = self.txtCadastroNome.text()
+      valor = int(self.txtCadastroValor.text())
+      quantidade = int(self.spbCadastroQuantidade.text())
+      
       if self.__validarCadastro():
-        novaCedula = Cedula(
-          nome = self.txtCadastroNome.text(),
-          valor = int(self.txtCadastroValor.text()),
-          quantidade = int(self.spbCadastroQuantidade.text())
-        )
-
-        database.addCedula(novaCedula)
+        novaCedula = Cedula(nome, valor, quantidade)
+        
+        cedulaExistente = None
+        for cedula in self.cedulas:
+          if cedula.valor == valor:
+            cedulaExistente = cedula
+        
+        if cedulaExistente:
+          database.atualizarCedula(cedulaExistente.id, quantidade, 1)
+        else:
+          database.addCedula(novaCedula)
+        
         self.__atualizar()
         self.__limparTela()
 

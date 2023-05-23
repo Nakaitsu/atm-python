@@ -37,36 +37,44 @@ class SaqueWindow(QMainWindow):
 
 
   def efetuarSaque(self, valor):
-    self.__atualizarNotas()
+      self.__atualizarNotas()
 
-    if self.__validarSaque(valor):
-      usuario = self.session['usuario']
-      self.quantidadeSaque = valor
+      if self.__validarSaque(valor):
+          usuario = self.session['usuario']
+          self.quantidadeSaque = valor
 
-      usuario = database.getUsuarioById(usuario.id)
+          usuario = database.getUsuarioById(usuario.id)
 
-      resultado = ''
-      qtdSaque = self.quantidadeSaque
+          resultado = ''
+          qtdSaque = self.quantidadeSaque
+          valorCaixa = 0
+          for nota in self.notas:
+              valorCaixa += (nota.valor * nota.quantidade)
+              print(valorCaixa)
+            
+          for nota in self.notas:
+              if qtdSaque <= valorCaixa:
+                  if qtdSaque >= nota.valor:
+                      quantidade_notas = min(qtdSaque // nota.valor, nota.quantidade)
+                      qtdSaque -= quantidade_notas * nota.valor
+                      resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+                      database.atualizarCedula(nota.id, quantidade_notas, 0)
 
-      for nota in self.notas:
-        if qtdSaque >= nota.valor:
-          quantidade_notas = min(qtdSaque // nota.valor, nota.quantidade)
-          qtdSaque -= quantidade_notas * nota.valor
-          resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
-          database.atualizarCedula(nota.id, quantidade_notas, 0)
+                      self.lblSaque.setText(resultado)
 
-      self.lblSaque.setText(resultado)
+                  database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
+                  self.session['usuario'] = database.getUsuarioById(usuario.id)
+                  self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
-      database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
-      self.session['usuario'] = database.getUsuarioById(usuario.id)
-      self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+                  self.quantidadeSaque = 0
+                  self.session['usuario'] = database.getUsuarioById(usuario.id)
+                  QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+              else:
+                QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
+                
+      else:
+          QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
 
-      self.quantidadeSaque = 0
-      self.session['usuario'] = database.getUsuarioById(usuario.id)
-      QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
-        
-    else:
-      QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
 
   def txtValorSaque_textChanged(self, text):
     if self.__validar():
