@@ -56,7 +56,10 @@ class SaqueWindow(QMainWindow):
               quantidade_notas = qtdSaque // nota.valor
               resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
               qtdSaque = qtdSaque % nota.valor
+              
               database.atualizarCedula(nota.id, quantidade_notas, 0)
+              for nota in database.getCedulas():
+                self.strNotas.append(nota.nome)  
 
           self.lblSaque.setText(resultado)
 
