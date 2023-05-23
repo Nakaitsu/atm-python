@@ -49,7 +49,7 @@ class SaqueWindow(QMainWindow):
         if qtdSaque % nota.valor == 0:
           saqueValido = True
 
-      if saqueValido: 
+      if saqueValido:
         if usuario.saldo >= qtdSaque:
           for nota in notas:
             if qtdSaque >= nota.valor and nota.quantidade > 0:
