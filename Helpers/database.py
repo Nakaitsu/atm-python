@@ -6,8 +6,8 @@ def start() -> None:
   conn = mysql.connector.connect(
     host = 'localhost',
     user = 'root',
-    # passwd = '235711',
-    # auth_plugin = 'mysql_native_password'
+    passwd = '235711',
+    auth_plugin = 'mysql_native_password'
   )
 
   cursor = conn.cursor()
@@ -28,9 +28,9 @@ def getConexao():
   return mysql.connector.connect(
     host = 'localhost',
     user = 'root',
-    # passwd = '235711',
+    passwd = '235711',
     database = 'caixa_eletronico',
-    # auth_plugin = 'mysql_native_password'
+    auth_plugin = 'mysql_native_password'
   )
 
 ## USUARIO ######

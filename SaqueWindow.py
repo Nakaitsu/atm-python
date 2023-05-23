@@ -21,57 +21,50 @@ class SaqueWindow(QMainWindow):
     self.txtValorSaque.textChanged.connect(self.txtValorSaque_textChanged)
     self.lblSaldo.setText(f'SEU SALDO: R$ {str(self.session["usuario"].saldo)}')
     
+    self.__atualizarNotas()
     strNotas = []
 
-    for nota in database.getCedulas():
+    for nota in self.notas:
       strNotas.append(nota.nome)  
 
     self.lblNotasDisponiveis.setText(" | ".join(strNotas))
 
     self.show()
 
+  def __atualizarNotas(self):
+    self.notas = database.getCedulas()
+    self.notas = [nota for nota in self.notas if nota.quantidade > 0]
+
+
   def efetuarSaque(self, valor):
+    self.__atualizarNotas()
+
     if self.__validarSaque(valor):
       usuario = self.session['usuario']
       self.quantidadeSaque = valor
 
-      self.session['usuario'] = database.getUsuarioById(usuario.id)
-
-      notas = database.getCedulas()
-      notas = [nota for nota in notas if nota.quantidade > 0]
+      usuario = database.getUsuarioById(usuario.id)
 
       resultado = ''
       qtdSaque = self.quantidadeSaque
-      
-      saqueValido = False
-      
-      for nota in notas:
-        if qtdSaque % nota.valor == 0:
-          saqueValido = True
 
-      if saqueValido:
-        if usuario.saldo >= qtdSaque:
-          for nota in notas:
-            if qtdSaque >= nota.valor and nota.quantidade > 0:
-              quantidade_notas = qtdSaque // nota.valor
-              resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
-              qtdSaque = qtdSaque % nota.valor
-              database.atualizarCedula(nota.id, quantidade_notas, 0)
+      for nota in self.notas:
+        if qtdSaque >= nota.valor:
+          quantidade_notas = min(qtdSaque // nota.valor, nota.quantidade)
+          qtdSaque -= quantidade_notas * nota.valor
+          resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+          database.atualizarCedula(nota.id, quantidade_notas, 0)
 
-          self.lblSaque.setText(resultado)
+      self.lblSaque.setText(resultado)
 
-          database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
-          self.session['usuario'] = database.getUsuarioById(usuario.id)
-          self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+      database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
+      self.session['usuario'] = database.getUsuarioById(usuario.id)
+      self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
-          self.quantidadeSaque = 0
-          QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
-          
-        else:
-          QMessageBox.information(self, 'ERROR', 'Saldo insuficiente!')
-      else:
-        QMessageBox.warning(self, 'ERROR', 'Valor de saque inválido!')
-
+      self.quantidadeSaque = 0
+      self.session['usuario'] = database.getUsuarioById(usuario.id)
+      QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+        
     else:
       QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
 
@@ -82,13 +75,15 @@ class SaqueWindow(QMainWindow):
       self.txtValorSaque.setText(text[:-1])
 
   def __validarSaque(self, valorSaque) -> bool:
+    self.__atualizarNotas()
     usuario = self.session['usuario']
     usuarioTemSaldo = usuario.saldo - valorSaque > 0
+    isValid = False
 
-    if valorSaque > 0 and usuarioTemSaldo:
-      return True
-    
-    return False
+    if valorSaque > 0 and usuarioTemSaldo and len(self.notas) > 0:
+      isValid = True
+
+    return isValid
 
   def __validar(self) -> bool:
     try:

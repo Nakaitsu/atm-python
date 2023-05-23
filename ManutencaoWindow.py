@@ -34,6 +34,7 @@ class ManutencaoWindow(QMainWindow):
       self.btnNotificacoes.setText('Notificações')
 
   def __atualizar(self):
+    self.cbbReposicaoNota.clear()
     self.cedulas = database.getCedulas()
     
     notasModel = QStandardItemModel()
@@ -100,7 +101,7 @@ class ManutencaoWindow(QMainWindow):
 
   def btnConfirmarReposicao_Clicked(self):
     database.atualizarCedula(int(self.cbbReposicaoNota.currentData()), self.spbReposicaoQuantidade.value(), True)
-    self.__limparTela()
     self.__atualizar()
+    self.__limparTela()
     
     QMessageBox.information(self, 'SUCESSO', 'Reposição efetuada com sucesso!')
