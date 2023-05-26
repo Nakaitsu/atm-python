@@ -45,17 +45,14 @@ class SaqueWindow(QMainWindow):
 
         usuario = database.getUsuarioById(usuario.id)
 
-        resultado = ''
-        qtdSaque = self.quantidadeSaque
         # valorCaixa = 0
         # for nota in self.notas:
         #     valorCaixa += (nota.valor * nota.quantidade)
         #     print(valorCaixa)
-        for nota in self.notas:
-          if qtdSaque >= nota.valor:
-            valorsaque = qtdSaque
-            resto = valorsaque % nota.valor
-            valorsaque = resto
+
+        resultado = ''
+        qtdSaque = self.quantidadeSaque
+        
         
         for nota in self.notas:
           # if qtdSaque <= valorCaixa:
@@ -78,8 +75,8 @@ class SaqueWindow(QMainWindow):
           # else:
           #   QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
               
-      else:
-        QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
+      # else:
+      #   QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
 
   def txtValorSaque_textChanged(self, text):
     if self.__validar():
@@ -90,12 +87,16 @@ class SaqueWindow(QMainWindow):
   def __validarSaque(self, valorSaque) -> bool:
     self.__atualizarNotas()
     usuario = self.session['usuario']
-    usuarioTemSaldo = usuario.saldo - valorSaque > 0
+    usuarioTemSaldo = usuario.saldo - valorSaque >= 0
     isValid = False
     saldoCaixa = 0
 
+    temp = valorSaque
     for nota in self.notas:
       saldoCaixa += nota.quantidade * nota.valor
+      if temp >= nota.valor:
+        resto = temp % nota.valor
+        temp = resto 
 
     caixaTemSaldo = valorSaque <= saldoCaixa
 
@@ -103,15 +104,19 @@ class SaqueWindow(QMainWindow):
     # o saldo precisa ter saldo maior que o valor de saque
     # o caixa precisa ter notas
     # o saldo total do caixa precisa ser maior que o saque
-    
-    temp = valorSaque
-    for nota in self.notas:
-      if temp >= nota.valor:
-        resto = temp % nota.valor
-        temp = resto 
-    
-    if valorSaque > 0 and usuarioTemSaldo and len(self.notas) > 0 and caixaTemSaldo and temp == 0:
-      isValid = True
+    if valorSaque > 0:
+          if usuarioTemSaldo:
+              if len(self.notas) > 0 and caixaTemSaldo:
+                  if temp == 0:
+                     isValid == True
+                  else:
+                      QMessageBox.warning(self, 'AVISO', 'O valor não pode ser computado com as notas dispóniveis!')
+              else:
+                  QMessageBox.warning(self, 'AVISO', 'O Caixa não tem notas o suficiente. Contate a manutenção ou tente em outro caixa!')
+          else:
+              QMessageBox.warning(self, 'AVISO', 'Saldo insuficiente!')
+    else:
+      QMessageBox.warning(self, 'AVISO', 'O valor de saque tem que ser maior que 0!')
 
     return isValid
 

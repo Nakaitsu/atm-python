@@ -37,7 +37,7 @@ class AutenticarWindow(QMainWindow):
           self.close()
           self.parent.show()
         else:
-          QMessageBox.warning(self, 'ERRO', 'Erro de autenticação!')
+          QMessageBox.warning(self, 'ERRO', 'CPF ou Senha incorretos!')
       
       else:
         QMessageBox.warning(self, 'AVISO', 'Preencha todos os campos!')
