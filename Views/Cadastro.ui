@@ -89,7 +89,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Depositar saldo inicial:</string>
+     <string>Deposito inicial:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnConfirmar">

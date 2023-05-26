@@ -36,7 +36,8 @@ class CadastroWindow(QMainWindow):
     if self.__validar():
       saldo = float(self.txtSaldo.text())
 
-      if saldo > 0:
+      if saldo > 0 and saldo <= 20000:
+        #if cpf != user.cpf     
         novoUsuario = Usuario(
           nome = self.txtNome.text(),
           cpf = self.txtCPF.text(),
@@ -52,7 +53,7 @@ class CadastroWindow(QMainWindow):
         self.close()
         self.parent.show()
       else:
-        QMessageBox.warning(self, 'ERRO', 'Informe um valor de saldo positivo!')
+        QMessageBox.warning(self, 'ERRO', 'O deposito tem que ser positivo e não pode ser maior que R$20000!')
     
     else:
       QMessageBox.warning(self, 'ERRO', 'Cadastro inválido!')

@@ -53,24 +53,25 @@ class SaqueWindow(QMainWindow):
               print(valorCaixa)
             
           for nota in self.notas:
-              if qtdSaque <= valorCaixa:
-                  if qtdSaque >= nota.valor:
-                      quantidade_notas = min(qtdSaque // nota.valor, nota.quantidade)
-                      qtdSaque -= quantidade_notas * nota.valor
-                      resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
-                      database.atualizarCedula(nota.id, quantidade_notas, 0)
+            if qtdSaque <= valorCaixa:
+              if qtdSaque >= nota.valor:
+                quantidade_notas = min(qtdSaque // nota.valor, nota.quantidade)
+                qtdSaque -= quantidade_notas * nota.valor
+                resultado += f"Serão {quantidade_notas} de R${nota.nome}\n"
+                database.atualizarCedula(nota.id, quantidade_notas, 0)
 
-                      self.lblSaque.setText(resultado)
+                self.lblSaque.setText(resultado)
 
-                  database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
-                  self.session['usuario'] = database.getUsuarioById(usuario.id)
-                  self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+                database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
+                self.session['usuario'] = database.getUsuarioById(usuario.id)
+                self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
-                  self.quantidadeSaque = 0
-                  self.session['usuario'] = database.getUsuarioById(usuario.id)
-                  QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
-              else:
-                QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
+                self.quantidadeSaque = 0
+                self.session['usuario'] = database.getUsuarioById(usuario.id)
+                QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+            
+          else:
+            QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
                 
       else:
           QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
