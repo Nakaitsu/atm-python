@@ -51,7 +51,12 @@ class SaqueWindow(QMainWindow):
         # for nota in self.notas:
         #     valorCaixa += (nota.valor * nota.quantidade)
         #     print(valorCaixa)
-          
+        for nota in self.notas:
+          if qtdSaque >= nota.valor:
+            valorsaque = qtdSaque
+            resto = valorsaque % nota.valor
+            valorsaque = resto
+        
         for nota in self.notas:
           # if qtdSaque <= valorCaixa:
           if qtdSaque >= nota.valor:
@@ -62,13 +67,13 @@ class SaqueWindow(QMainWindow):
 
             self.lblSaque.setText(resultado)
 
-            database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
-            self.session['usuario'] = database.getUsuarioById(usuario.id)
-            self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
+        database.atualizarSaldoUsuario(usuario.id, usuario.saldo - self.quantidadeSaque)
+        self.session['usuario'] = database.getUsuarioById(usuario.id)
+        self.lblSaldo.setText(f'SEU SALDO: R${str(self.session["usuario"].saldo)}')
 
-            self.quantidadeSaque = 0
-            self.session['usuario'] = database.getUsuarioById(usuario.id)
-            QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
+        self.quantidadeSaque = 0
+        self.session['usuario'] = database.getUsuarioById(usuario.id)
+        QMessageBox.information(self, 'SUCESSO', 'Saque efetuado!')
 
           # else:
           #   QMessageBox.warning(self, 'AVISO', 'Saque Invalidado!')
@@ -97,9 +102,15 @@ class SaqueWindow(QMainWindow):
     # valor de saque não pode ser negativo ou 0
     # o saldo precisa ter saldo maior que o valor de saque
     # o caixa precisa ter notas
-    # o saldo total do caixa precisa ser maior que o saque 
+    # o saldo total do caixa precisa ser maior que o saque
     
-    if valorSaque > 0 and usuarioTemSaldo and len(self.notas) > 0 and caixaTemSaldo:
+    temp = valorSaque
+    for nota in self.notas:
+      if temp >= nota.valor:
+        resto = temp % nota.valor
+        temp = resto 
+    
+    if valorSaque > 0 and usuarioTemSaldo and len(self.notas) > 0 and caixaTemSaldo and temp == 0:
       isValid = True
 
     return isValid

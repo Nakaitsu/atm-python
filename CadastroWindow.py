@@ -25,7 +25,7 @@ class CadastroWindow(QMainWindow):
       saldo = int(self.txtSaldo.text())
 
       if nome and cpf and endereco and senha and saldo > 0:
-        if not database.UsuarioExiste(cpf):
+        if not database.UsuarioExiste(self.txtCPF.text()):
           return True
       
       return False
@@ -37,8 +37,7 @@ class CadastroWindow(QMainWindow):
     if self.__validar():
       saldo = float(self.txtSaldo.text())
 
-      if saldo > 0 and saldo <= 20000:
-        #if cpf != user.cpf     
+      if saldo > 0 and saldo <= 20000:  
         novoUsuario = Usuario(
           nome = self.txtNome.text(),
           cpf = self.txtCPF.text(),

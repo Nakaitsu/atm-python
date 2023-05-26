@@ -109,8 +109,13 @@ class ManutencaoWindow(QMainWindow):
     self.parent.show()
 
   def btnConfirmarReposicao_Clicked(self):
-    database.atualizarCedula(int(self.cbbReposicaoNota.currentData()), self.spbReposicaoQuantidade.value(), True)
-    self.__atualizar()
-    self.__limparTela()
-    
-    QMessageBox.information(self, 'SUCESSO', 'Reposição efetuada com sucesso!')
+    for cedula in self.cedulas:
+      if cedula.id == int(self.cbbReposicaoNota.currentData()):
+        if cedula.quantidade + self.spbReposicaoQuantidade.value() <= 100:
+          database.atualizarCedula(int(self.cbbReposicaoNota.currentData()), self.spbReposicaoQuantidade.value(), True)
+          self.__atualizar()
+          self.__limparTela()
+      
+          QMessageBox.information(self, 'SUCESSO', 'Reposição efetuada com sucesso!')
+        else:
+          QMessageBox.information(self,"ERRO", "O banco não pode ter mais de 100 cedulas de uma vez")
