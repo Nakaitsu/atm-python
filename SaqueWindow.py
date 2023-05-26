@@ -108,7 +108,7 @@ class SaqueWindow(QMainWindow):
           if usuarioTemSaldo:
               if len(self.notas) > 0 and caixaTemSaldo:
                   if temp == 0:
-                     isValid == True
+                     isValid = True
                   else:
                       QMessageBox.warning(self, 'AVISO', 'O valor não pode ser computado com as notas dispóniveis!')
               else:
