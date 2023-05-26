@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS `caixa_eletronico`.`cedulas` (
   quantidade INT NOT NULL
 );
 
---    INSERT INTO `caixa_eletronico`.`cedulas` (nome, valor, quantidade)
---    VALUES 
---      ('20', 20, 100),
---      ('50', 50, 100),
---      ('100', 100, 100);
--- --  IF @cedulasTableExists = 0 THEN
+  --  INSERT INTO `caixa_eletronico`.`cedulas` (nome, valor, quantidade)
+  --  VALUES 
+  --    ('20', 20, 100),
+  --    ('50', 50, 100),
+  --    ('100', 100, 100);
+--  IF @cedulasTableExists = 0 THEN
 
 
 --  END IF;
