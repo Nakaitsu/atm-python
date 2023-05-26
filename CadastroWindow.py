@@ -25,7 +25,8 @@ class CadastroWindow(QMainWindow):
       saldo = int(self.txtSaldo.text())
 
       if nome and cpf and endereco and senha and saldo > 0:
-        return True
+        if not database.UsuarioExiste(cpf):
+          return True
       
       return False
     
